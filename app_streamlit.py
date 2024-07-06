@@ -24,8 +24,8 @@ def register_patient(name, phone):
     response = requests.post(f"{API_BASE_URL}/patients", json=data)
     return response.status_code == 200
 
-def schedule_appointment(patient_id, doctor_id, date, time):
-    data = {"patient_id": patient_id, "doctor_id": doctor_id, "date": date, "time": time}
+def schedule_appointment(patient_id, doctor_id, time_slot):
+    data = {"patient_id": patient_id, "doctor_id": doctor_id, "time_slot": time_slot,}
     response = requests.post(f"{API_BASE_URL}/appointments", json=data)
     return response.status_code == 200
 
@@ -72,8 +72,9 @@ with tab2:
     doctor_id = st.selectbox("Selecione o Médico", [m['name'] for m in doctors])
     schedules = get_available_schedules(specialty)
     time_slot = st.selectbox("Horários Disponíveis", [f"{a['start_time']} - {a['end_time']}" for a in schedules])
+    
     if st.button("Agendar Consulta"):
-        if schedule_appointment(patient_name, doctor_id, date, time):
+        if schedule_appointment(patient_name, doctor_id, time_slot):
             st.success("Consulta agendada com sucesso.")
         else:
             st.error("Falha ao agendar consulta.")
